@@ -1,0 +1,28 @@
+.dataViewerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin: 30px;
+}
+
+.dataViewerCard {
+  width: 350px;
+  height: 330px;
+  margin: 5px;
+  background-image: url("https://www.scor.com/sites/default/files/london_smog.jpg");
+  border: 2px solid black;
+  > div {
+    margin: 10px;
+    > span {
+      word-wrap: break-word;
+      color: white;
+    }
+  }
+}
+
+.polutionText {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

@@ -13,12 +13,11 @@ class App extends Component {
     shortcut: "",
     pollution: "",
     city: "",
-    newData: {}
+    pollutionData: {}
   };
 
   handleInputChange = e => {
     const country = e.target.value;
-
     var shortcut = "";
 
     if (country === "GERMANY") {
@@ -48,16 +47,16 @@ class App extends Component {
         throw Error(response.status);
       })
       .then(response => response.json())
-      .then(newData => {
+      .then(pollutionData => {
         this.setState({
-          newData
+          pollutionData
         });
       })
       .catch(error => console.log(error + " UPS...something went wrong!"));
   }
 
   handlePollution(e, polutionParam) {
-    var data = this.state.newData.results;
+    var data = this.state.pollutionData.results;
     var tenMostPoluted = filterPolutedCities(data, polutionParam);
     this.setState({
       currentCities: tenMostPoluted,
@@ -72,13 +71,14 @@ class App extends Component {
           Check the most polluted cities in one of four countries!
         </h1>
         <div className="centerContainer">
-          <select onChange={e => this.handleInputChange(e)}>
-            <option disabled selected value="">
-              {" "}
-              -- select an option --{" "}
+          <select defaultValue="" onChange={e => this.handleInputChange(e)}>
+            <option key="defaultOption" disabled value="">
+              -- select an option --
             </option>
             {countriesList.map(country => (
-              <option value={country}>{country}</option>
+              <option key={country} value={country}>
+                {country}
+              </option>
             ))}
           </select>
         </div>

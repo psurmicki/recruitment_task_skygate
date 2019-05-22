@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.scss";
 import CityCard from "./CityCard";
+import noData from "./images/noData.PNG";
 
 export class DataViewerComponent extends Component {
   getWikiApiUrls(cities) {
@@ -13,22 +14,32 @@ export class DataViewerComponent extends Component {
     return wikiApiUrls;
   }
   render() {
-    var { cities, currentPolution } = this.props;
+    var { cities } = this.props;
 
     return (
-      <div>
-        <div className="centerContainer">
-          <h2>Selected pollution: {currentPolution.toUpperCase()}</h2>
-        </div>
-        <div className="dataViewerContainer">
-          {cities.map(city => (
-            <CityCard
-              key={city.city}
-              city={city}
-              positon={cities.indexOf(city) + 1}
+      <div className="dataViewerContainer">
+        {cities.length === 0 ? (
+          <div>
+            <img
+              className="noDataViewerCard"
+              src={noData}
+              alt="no data in DB"
             />
-          ))}
-        </div>
+            <p className="noDataText">
+              Please, choose another pollution factor
+            </p>
+          </div>
+        ) : (
+          <div>
+            {cities.map(city => (
+              <CityCard
+                key={city.city}
+                city={city}
+                positon={cities.indexOf(city) + 1}
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   }

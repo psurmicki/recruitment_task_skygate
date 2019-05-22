@@ -10,14 +10,21 @@
   height: 330px;
   margin: 5px;
   background-image: url("https://www.scor.com/sites/default/files/london_smog.jpg");
-  border: 2px solid black;
+  border: 2px solid rgb(0, 0, 0);
   > div {
     margin: 10px;
     > span {
       word-wrap: break-word;
-      color: white;
+      color: rgb(255, 255, 255);
     }
   }
+}
+
+.noDataViewerCard {
+  width: 350px;
+  height: 330px;
+  margin: 5px;
+  border: 2px solid rgb(0, 0, 0);
 }
 
 .centerContainer {
@@ -28,9 +35,9 @@
 }
 
 .button {
-  background-color: #f4511e;
+  background-color: rgb(244, 81, 30);
   border: none;
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 16px 32px;
   text-align: center;
   font-size: 16px;
@@ -57,3 +64,17 @@
   border: none;
 }
 
+.override {
+  display: block;
+  margin: 0 auto;
+  border-color: rgb(255, 0, 0);
+  size: 150px;
+  color: rgb(18, 58, 188);
+}
+
+.noDataText {
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 25px;
+  margin: 4px 2px;
+}

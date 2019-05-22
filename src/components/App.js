@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import { PacmanLoader } from "react-spinners";
+
 import DataViewerComponent from "./DataViewerComponent";
-import "./App.scss";
 import filterPolutedCities from "./functions/filterPolutedCities";
+import ButtonsPollutionFactors from "./ButtonsPollutionFactors";
+
+//import styles
+import "./App.scss";
 
 const countriesList = ["GERMANY", "FRANCE", "POLAND", "SPAIN"];
-
-const polutionFactors = ["co", "so2", "o3", "bc", "no2", "pm25", "pm10"];
 
 class App extends Component {
   state = {
@@ -13,31 +16,41 @@ class App extends Component {
     shortcut: "",
     pollution: "",
     city: "",
-    pollutionData: {}
+    pollutionData: "",
+    isLoading: false
   };
 
   handleInputChange = e => {
     const country = e.target.value;
     var shortcut = "";
 
-    if (country === "GERMANY") {
-      shortcut = "GE";
-    } else if (country === "FRANCE") {
-      shortcut = "FR";
-    } else if (country === "POLAND") {
-      shortcut = "PL";
-    } else if (country === "SPAIN") {
-      shortcut = "ES";
-    } else return null;
-
+    switch (country) {
+      case "GERMANY":
+        shortcut = "GE";
+        break;
+      case "FRANCE":
+        shortcut = "FR";
+        break;
+      case "POLAND":
+        shortcut = "PL";
+        break;
+      case "SPAIN":
+        shortcut = "ES";
+        break;
+      default:
+        shortcut = "";
+        break;
+    }
     this.setState({
       shortcut
     });
   };
 
   async handleDataFetch() {
-    const { shortcut } = this.state;
+    const { shortcut, isLoading } = this.state;
     const weatherAPI = `https://api.openaq.org/v1/measurements?country=${shortcut}`;
+
+    this.handleLoaderChange();
 
     await fetch(weatherAPI)
       .then(response => {
@@ -49,10 +62,11 @@ class App extends Component {
       .then(response => response.json())
       .then(pollutionData => {
         this.setState({
-          pollutionData
+          pollutionData,
+          isLoading: !isLoading
         });
       })
-      .catch(error => console.log(error + " UPS...something went wrong!"));
+      .catch(err => console.log(`${err} UPS...something went wrong!`));
   }
 
   handlePollution(e, polutionParam) {
@@ -64,7 +78,15 @@ class App extends Component {
     });
   }
 
+  handleLoaderChange = () => {
+    this.setState({
+      isLoading: !this.state.isLoading
+    });
+  };
+
   render() {
+    const { pollutionData, pollution, currentCities, isLoading } = this.state;
+
     return (
       <div>
         <h1 className="centerContainer">
@@ -73,7 +95,7 @@ class App extends Component {
         <div className="centerContainer">
           <select defaultValue="" onChange={e => this.handleInputChange(e)}>
             <option key="defaultOption" disabled value="">
-              -- select an option --
+              -- select country --
             </option>
             {countriesList.map(country => (
               <option key={country} value={country}>
@@ -84,33 +106,33 @@ class App extends Component {
         </div>
         <div className="centerContainer">
           <button className="button" onClick={e => this.handleDataFetch(e)}>
-            Show me results!
+            Click to show results!
           </button>
+        </div>
+        <div className="centerContainer">
+          {isLoading && !pollutionData ? (
+            <div className="sweet-loading">
+              <PacmanLoader className="override" />
+            </div>
+          ) : null}
         </div>
         <div>
           <div>
-            <div>
-              <h3 className="centerContainer">Choose pollution factors</h3>
-              <div className="centerContainer">
-                {polutionFactors.map(polution => (
-                  <button
-                    className="button"
-                    key={polution}
-                    onClick={e => {
-                      this.handlePollution(e, polution);
-                    }}
-                  >
-                    {polution}
-                  </button>
-                ))}
+            {pollutionData && (
+              <div>
+                <ButtonsPollutionFactors
+                  pollutionData={pollutionData}
+                  currentPolution={pollution}
+                  handlePollution={(e, polutionParam) =>
+                    this.handlePollution(e, polutionParam)
+                  }
+                />
+                <DataViewerComponent
+                  cities={currentCities}
+                  currentPolution={pollution}
+                />
               </div>
-            </div>
-            <div>
-              <DataViewerComponent
-                cities={this.state.currentCities}
-                currentPolution={this.state.pollution}
-              />
-            </div>
+            )}
           </div>
         </div>
       </div>

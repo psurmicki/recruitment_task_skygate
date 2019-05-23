@@ -26,7 +26,7 @@ class App extends Component {
 
     switch (country) {
       case "GERMANY":
-        shortcut = "GE";
+        shortcut = "DE";
         break;
       case "FRANCE":
         shortcut = "FR";
